@@ -628,7 +628,7 @@ TxConfig::SetDefaults(bool commit)
         #if defined(RADIO_SX127X)
             SetRate(enumRatetoIndex(RATE_LORA_200HZ));
         #elif defined(RADIO_SX128X)
-            SetRate(enumRatetoIndex(RATE_LORA_250HZ));
+            SetRate(enumRatetoIndex(RATE_LORA_50HZ));
         #endif
         SetPower(POWERMGNT::getDefaultPower());
 #if defined(PLATFORM_ESP32)
