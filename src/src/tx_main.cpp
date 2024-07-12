@@ -1075,6 +1075,26 @@ void ProcessMSPPacket(uint32_t now, mspPacket_t *packet)
   }
 }
 
+// send link stats over debug_backpack_tx
+// protocol is uart
+void SendLSToBackpack()
+{
+  // rssi1,rssi2,lq,snr,ant,rf_m,pwr,d_rss1,d_lq,d_snr
+  debugPrintf("%d,%d,%u,%d,%u,%u,%u,%d,%u,%d",
+    (int8_t)CRSF::LinkStatistics.uplink_RSSI_1,
+    (int8_t)CRSF::LinkStatistics.uplink_RSSI_2,
+    CRSF::LinkStatistics.uplink_Link_quality,
+    CRSF::LinkStatistics.uplink_SNR,
+    CRSF::LinkStatistics.active_antenna,
+    CRSF::LinkStatistics.rf_Mode,
+    CRSF::LinkStatistics.uplink_TX_Power,
+    (int8_t)CRSF::LinkStatistics.downlink_RSSI,
+    CRSF::LinkStatistics.downlink_Link_quality,
+    CRSF::LinkStatistics.downlink_SNR
+  );
+  TxBackpack->println();
+}
+
 static void HandleUARTout()
 {
   if (firmwareOptions.is_airport)
@@ -1458,6 +1478,7 @@ void loop()
     handset->sendTelemetryToTX(linkStatisticsFrame);
     crsfTelemToMSPOut(linkStatisticsFrame);
     TLMpacketReported = now;
+    SendLSToBackpack();
   }
 
   if (TelemetryReceiver.HasFinishedData())
